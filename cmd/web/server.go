@@ -15,5 +15,6 @@ func (a *application) listenAndServe() error {
 	}
 
 	a.infoLog.Printf("server listening on :%s\n", host)
+
 	return serv.ListenAndServe()
 }
