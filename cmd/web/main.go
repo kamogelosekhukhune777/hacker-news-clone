@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/CloudyKit/jet"
+	"github.com/CloudyKit/jet/v6"
 	"github.com/alexedwards/scs/postgresstore"
 	"github.com/alexedwards/scs/v2"
 	_ "github.com/lib/pq"
@@ -65,7 +65,7 @@ func main() {
 		errLog:  log.New(os.Stderr, "ERROR\t", log.Ltime|log.Ldate|log.Lshortfile),
 	}
 
-	//inti  jet template
+	//init jet template
 	if app.debug {
 		app.view = jet.NewSet(jet.NewOSFileSystemLoader("./views"), jet.InDevelopmentMode())
 	} else {

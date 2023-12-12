@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/CloudyKit/jet"
+	"github.com/CloudyKit/jet/v6"
 )
 
 type TemplateData struct {
@@ -33,6 +33,7 @@ func (a *application) render(w http.ResponseWriter, r *http.Request, view string
 	}
 
 	if err = tp.Execute(w, vars, td); err != nil {
+		return err
 	}
 
 	return nil
