@@ -40,12 +40,13 @@ func main() {
 		url:  "http://localhost:8080",
 	}
 
-	db2, err := openDB("postgres")
+	db2, err := openDB("postgres://postgres@...")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db2.Close()
 
+	//init upper/db
 	upper, err := postgresql.New(db2)
 	if err != nil {
 		log.Fatal(err)
@@ -57,6 +58,7 @@ func main() {
 		}
 	}(upper)
 
+	//init application
 	app := &application{
 		appName: "hacker News",
 		server:  server,
