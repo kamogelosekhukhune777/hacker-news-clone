@@ -6,7 +6,8 @@ import (
 	"time"
 )
 
-func (a *application) listenAndServe() error {
+// starts the server
+func (a *application) listenAndServes() error {
 	host := fmt.Sprintf("%s:%s", a.server.host, a.server.port)
 	serv := http.Server{
 		Handler:     a.routes(),

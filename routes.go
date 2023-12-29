@@ -10,17 +10,22 @@ import (
 func (a *application) routes() http.Handler {
 
 	mux := chi.NewRouter()
+
 	mux.Use(middleware.RequestID)
 	mux.Use(middleware.RealIP)
-	mux.Use(middleware.Recoverer)
-	mux.Use(a.LoadSession)
 
 	if a.debug {
 		mux.Use(middleware.Logger)
 	}
 
-	fileServer := http.FileServer(http.Dir("./public"))
-	mux.Handle("/public/*", http.StripPrefix("/public", fileServer))
+	mux.Use(middleware.Recoverer)
+	mux.Use(a.LoadSession)
+
+	/*
+		//register routes
+		mux.Get("/", a.homeHandler)
+			fileServer := http.FileServer(http.Dir("./public"))
+			mux.Handle("/public/*", http.StripPrefix("/public", fileServer))*/
 
 	return mux
 }

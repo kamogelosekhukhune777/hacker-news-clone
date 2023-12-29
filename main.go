@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"database/sql"
 	"log"
 	"net/http"
@@ -14,8 +15,6 @@ import (
 	"github.com/upper/db/v4"
 	"github.com/upper/db/v4/adapter/postgresql"
 )
-
-//37:00
 
 type application struct {
 	appName string
@@ -82,7 +81,7 @@ func main() {
 	app.session.Cookie.SameSite = http.SameSiteStrictMode
 	app.session.Store = postgresstore.New(db2)
 
-	if err := app.listenAndServe(); err != nil {
+	if err := app.listenAndServes(); err != nil {
 		log.Fatal(err)
 	}
 }
@@ -93,7 +92,10 @@ func openDB(dsn string) (*sql.DB, error) {
 		return nil, err
 	}
 
-	err = db.Ping()
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	defer cancel()
+
+	err = db.PingContext(ctx)
 	if err != nil {
 		return nil, err
 	}

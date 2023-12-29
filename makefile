@@ -1,6 +1,3 @@
-#Variables
-GOCMD=go
-GORUN=$(GOCMD) run
+run:
+	@go run .
 
-#Targets
-run : $(GORUN) cmd/web/*.go

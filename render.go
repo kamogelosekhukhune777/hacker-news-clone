@@ -16,6 +16,7 @@ type TemplateData struct {
 	CSRFToken       string
 }
 
+// mimicks Global variable declaration
 func (a *application) defaultData(td *TemplateData, r *http.Request) *TemplateData {
 	td.URL = a.server.url
 
