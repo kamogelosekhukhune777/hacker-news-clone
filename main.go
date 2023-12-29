@@ -11,6 +11,7 @@ import (
 	"github.com/CloudyKit/jet/v6"
 	"github.com/alexedwards/scs/postgresstore"
 	"github.com/alexedwards/scs/v2"
+	"github.com/kamogelosekhukhune777/hacker-news-clone/models"
 	_ "github.com/lib/pq"
 	"github.com/upper/db/v4"
 	"github.com/upper/db/v4/adapter/postgresql"
@@ -24,6 +25,7 @@ type application struct {
 	infoLog *log.Logger
 	view    *jet.Set
 	session *scs.SessionManager
+	model   models.Models
 }
 
 type server struct {
@@ -45,7 +47,7 @@ func main() {
 	}
 	defer db2.Close()
 
-	//init upper/db
+	//init connection to interact with Postgres
 	upper, err := postgresql.New(db2)
 	if err != nil {
 		log.Fatal(err)
@@ -64,6 +66,7 @@ func main() {
 		debug:   true,
 		infoLog: log.New(os.Stdout, "INFO\t", log.Ltime|log.Ldate|log.Lshortfile),
 		errLog:  log.New(os.Stderr, "ERROR\t", log.Ltime|log.Ldate|log.Lshortfile),
+		model:   models.New(upper),
 	}
 
 	//init jet template

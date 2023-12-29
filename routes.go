@@ -8,7 +8,6 @@ import (
 )
 
 func (a *application) routes() http.Handler {
-
 	mux := chi.NewRouter()
 
 	mux.Use(middleware.RequestID)
@@ -21,11 +20,10 @@ func (a *application) routes() http.Handler {
 	mux.Use(middleware.Recoverer)
 	mux.Use(a.LoadSession)
 
-	/*
-		//register routes
-		mux.Get("/", a.homeHandler)
-			fileServer := http.FileServer(http.Dir("./public"))
-			mux.Handle("/public/*", http.StripPrefix("/public", fileServer))*/
+	//register routes
+	mux.Get("/", a.homeHandler)
+	fileServer := http.FileServer(http.Dir("./public"))
+	mux.Handle("/public/*", http.StripPrefix("/public", fileServer))
 
 	return mux
 }
