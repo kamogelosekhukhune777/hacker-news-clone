@@ -3,9 +3,12 @@ package main
 import (
 	"context"
 	"database/sql"
+	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
 
 	"github.com/CloudyKit/jet/v6"
@@ -35,6 +38,8 @@ type server struct {
 }
 
 func main() {
+	migrate := flag.Bool("migrate", false, "should migrate - drop all tables")
+	flag.Parse()
 	server := server{
 		host: "localhost",
 		port: "8080",
@@ -58,6 +63,16 @@ func main() {
 			log.Fatal(err)
 		}
 	}(upper)
+
+	//migrate
+	if *migrate {
+		fmt.Println("running migration...")
+		err := Migrate(upper)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("...Done running migration")
+	}
 
 	//init application
 	app := &application{
@@ -104,4 +119,15 @@ func openDB(dsn string) (*sql.DB, error) {
 	}
 
 	return db, nil
+}
+
+func Migrate(db db.Session) error {
+	script, err := os.ReadFile(filepath.Join("./migrations/tables.sql"))
+	if err != nil {
+		return err
+	}
+
+	_, err = db.SQL().Exec(script)
+
+	return err
 }
