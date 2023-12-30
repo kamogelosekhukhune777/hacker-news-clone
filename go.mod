@@ -9,6 +9,7 @@ require (
 	github.com/go-chi/chi/v5 v5.0.10
 	github.com/lib/pq v1.10.9
 	github.com/upper/db/v4 v4.7.0
+	golang.org/x/crypto v0.12.0
 )
 
 require (
@@ -23,6 +24,5 @@ require (
 	github.com/jackc/pgtype v1.14.0 // indirect
 	github.com/jackc/pgx/v4 v4.18.1 // indirect
 	github.com/segmentio/fasthash v1.0.3 // indirect
-	golang.org/x/crypto v0.12.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 )

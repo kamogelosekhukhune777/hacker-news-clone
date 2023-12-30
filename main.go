@@ -104,6 +104,7 @@ func main() {
 	}
 }
 
+// opens and returns a database connection
 func openDB(dsn string) (*sql.DB, error) {
 	db, err := sql.Open("postgres", dsn)
 	if err != nil {
@@ -121,6 +122,7 @@ func openDB(dsn string) (*sql.DB, error) {
 	return db, nil
 }
 
+// runs migration
 func Migrate(db db.Session) error {
 	script, err := os.ReadFile(filepath.Join("./migrations/tables.sql"))
 	if err != nil {
