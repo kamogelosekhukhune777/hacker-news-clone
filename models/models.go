@@ -12,16 +12,18 @@ var (
 	ErrNoMoreRows     = errors.New("no record found")
 	ErrDuplicateEmail = errors.New("email already exists in database")
 	ErrUserNotActive  = errors.New("your account is inactive")
-	ErrInvalidLogin   = errors.New("Invalid login")
+	ErrInvalidLogin   = errors.New("invalid login")
 )
 
 type Models struct {
 	Users UsersModel
+	Posts PostModel
 }
 
 func New(db db.Session) Models {
 	return Models{
 		Users: UsersModel{db: db},
+		Posts: PostModel{db: db},
 	}
 }
 
