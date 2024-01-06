@@ -16,8 +16,9 @@ var (
 )
 
 type Models struct {
-	Users UsersModel
-	Posts PostModel
+	Users    UsersModel
+	Posts    PostModel
+	Comments CommentsModel
 }
 
 func New(db db.Session) Models {

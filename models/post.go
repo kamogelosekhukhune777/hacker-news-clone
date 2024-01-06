@@ -132,3 +132,24 @@ func (p *Post) Host() string {
 
 	return ur.Host
 }
+
+func (p PostModel) Insert(title, url string, userId int) (*Post, error) {
+
+	post := Post{
+		CreatedAt: time.Now(),
+		Title:     title,
+		Url:       url,
+		UserId:    userId,
+	}
+
+	collection := p.db.Collection(p.Table())
+
+	res, err := collection.Insert(post)
+	if err != nil {
+		return nil, err
+	}
+
+	post.ID = convertUpperIDtoInt(res.ID())
+
+	return &post, nil
+}
