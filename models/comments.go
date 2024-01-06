@@ -20,10 +20,14 @@ type Comment struct {
 	User      `db:",inline"`
 }
 
-func (m CommentsModel) GetForPost(postId int) ([]Comment, error) {
+func (c CommentsModel) Table() string {
+	return "posts"
+}
+
+func (c CommentsModel) GetForPost(postId int) ([]Comment, error) {
 	var comments []Comment
 
-	q := m.db.SQL().Select("c.id as comment_id", "c.created_at as c_created_at", "*").
+	q := c.db.SQL().Select("c.id as comment_id", "c.created_at as c_created_at", "*").
 		From("comments as c").
 		Join("users as u").On("c.user_id = u.id").
 		Where(db.Cond{"c.post_id": postId}).
@@ -36,8 +40,8 @@ func (m CommentsModel) GetForPost(postId int) ([]Comment, error) {
 	return comments, nil
 }
 
-func (m CommentsModel) Insert(body string, postId, userId int) error {
-	_, err := m.db.Collection("comments").Insert(map[string]interface{}{
+func (c CommentsModel) Insert(body string, postId, userId int) error {
+	_, err := c.db.Collection(c.Table()).Insert(map[string]interface{}{
 		"body":    body,
 		"user_id": userId,
 		"post_id": postId,
@@ -51,5 +55,5 @@ func (m CommentsModel) Insert(body string, postId, userId int) error {
 }
 
 func (c *Comment) DateHuman() string {
-	return carbon.Time2Carbon(c.CreatedAt).DiffForHumans()
+	return carbon.CreateFromStdTime(c.CreatedAt).DiffForHumans()
 }
