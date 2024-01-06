@@ -3,9 +3,11 @@ package models
 import (
 	"database/sql"
 	"errors"
+	"net/url"
 	"strings"
 	"time"
 
+	"github.com/golang-module/carbon/v2"
 	"github.com/upper/db/v4"
 )
 
@@ -46,6 +48,7 @@ func (p PostModel) Table() string {
 	return "posts"
 }
 
+// gets a specific post
 func (p PostModel) Get(id int) (*Post, error) {
 	var post Post
 	q := strings.Replace(queryTemplate, "#where#", "WHERE p.id = $1", 1)
@@ -66,6 +69,7 @@ func (p PostModel) Get(id int) (*Post, error) {
 	return &post, nil
 }
 
+// gets all epecific posts
 func (p PostModel) GetAll(f Filter) ([]Post, Metadata, error) {
 	var posts []Post
 	var rows *sql.Rows
@@ -96,4 +100,35 @@ func (p PostModel) GetAll(f Filter) ([]Post, Metadata, error) {
 
 	first := posts[0]
 	return posts, calculateMetadata(first.TotalRecords, f.Page, f.PageSize), nil
+}
+
+func (p PostModel) Vote(postId, userId int) error {
+
+	collection := p.db.Collection("votes")
+
+	_, err := collection.Insert(map[string]int{
+		"post_id": postId,
+		"user_id": userId,
+	})
+	if err != nil {
+		if errHasDuplicates(err, "votes_pkey") {
+			return ErrDuplicateVotes
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (p *Post) DateHuman() string {
+	return carbon.CreateFromStdTime(p.CreatedAt).DiffForHumans()
+}
+
+func (p *Post) Host() string {
+	ur, err := url.Parse(p.Url)
+	if err != nil {
+		return ""
+	}
+
+	return ur.Host
 }
